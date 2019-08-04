@@ -13,9 +13,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 import json
 
-with open(os.path.abspath("application.json"), mode="r", encoding="utf-8") as f:
-    settings = json.load(f)
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -24,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = settings["DJANGO_SECRET_KEY"]
+SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -86,11 +83,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': settings["DB_NAME"],
-        'HOST': settings["DB_HOST"],
-        'USER': settings["DB_USER"],
-        'PORT': settings["DB_PORT"],
-        'PASSWORD': settings["DB_PASSWORD"],
+        'NAME': os.environ["DB_NAME"],
+        'HOST': os.environ["DB_HOST"],
+        'USER': os.environ["DB_USER"],
+        'PORT': os.environ["DB_PORT"],
+        'PASSWORD': os.environ["DB_PASSWORD"],
         'ATOMIC_REQUESTS': True,
         'OPTIONS': {
                     'charset': 'utf8mb4',
