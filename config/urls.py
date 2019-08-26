@@ -8,6 +8,6 @@ from hashtags.views import SearchTaskFilterViewSet
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api-token-auth/', obtain_jwt_token, name="jwt"),
-    url(r'^v1/task/', include(my_router.urls)),
-    url(r'^v1/task/(?P<hashtag>\w+)/$',SearchTaskFilterViewSet.as_view()),
+    url(r'^api/v1/', include(my_router.urls)),
+    url(r'^api/v1/task/(?P<hashtag>\w+)/$', SearchTaskFilterViewSet.as_view()),
 ]
