@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Word, Biterm, CoOccurrence, Hashtag, HashtagTask
+from drf_writable_nested import WritableNestedModelSerializer
 
 
 class WordSerializer(serializers.ModelSerializer):
@@ -24,15 +25,18 @@ class BitermSerializer(serializers.ModelSerializer):
         model = Biterm
         fields = ('biterm_id', 'word_i', 'word_j')
 
+    def validate(self, data):
+        if data['word_i']['char_string'] > data['word_j']['char_string']:
+            raise serializers.ValidationError(
+                'Biterm is not in dictionary order.')
+        elif data['word_i']['char_string'] == data['word_j']['char_string']:
+            raise serializers.ValidationError(
+                'Biterm must consist of two different words.')
+
+        return data
+
     def create(self, validated_data):
-        if validated_data['word_i']['char_string'] < validated_data['word_j']['char_string']:
-            word_i_str, word_j_str = validated_data['word_i'][
-                'char_string'], validated_data['word_j']['char_string']
-        elif validated_data['word_i']['char_string'] > validated_data['word_j']['char_string']:
-            word_i_str, word_j_str = validated_data['word_j'][
-                'char_string'], validated_data['word_i']['char_string']
-        else:
-            return Biterm()
+        word_i_str, word_j_str = validated_data['word_i']['char_string'], validated_data['word_j']['char_string']
 
         biterm = Biterm.objects.filter(
             word_i__char_string=word_i_str, word_j__char_string=word_j_str).first()
@@ -43,15 +47,9 @@ class BitermSerializer(serializers.ModelSerializer):
             word_j = Word.objects.filter(
                 char_string=word_j_str).first()
 
-            if word_i is None:
-                word_i = Word.objects.create(
-                    char_string=word_i_str)
-            if word_j is None:
-                word_j = Word.objects.create(
-                    char_string=word_j_str)
-
-            biterm = Biterm.objects.create(
-                word_i=word_i, word_j=word_j)
+            biterm_id = str(word_i.word_id)+str(word_j.word_id)
+            biterm = Biterm.objects.create(biterm_id=biterm_id,
+                                           word_i=word_i, word_j=word_j)
 
         return biterm
 
@@ -74,7 +72,7 @@ class CoOccurrenceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CoOccurrence
-        fields = ('id', 'biterm', 'hashtag', 'frequency')
+        fields = ('id', 'biterm', 'hashtag')
 
     def create(self, validated_data):
         hashtag = Hashtag.objects.filter(
@@ -82,17 +80,6 @@ class CoOccurrenceSerializer(serializers.ModelSerializer):
         biterm = Biterm.objects.filter(word_i__char_string=validated_data['biterm']['word_i']['char_string'],
                                        word_j__char_string=validated_data['biterm']['word_j']['char_string']
                                        ).first()
-
-        if hashtag is None:
-            hashtag = Hashtag.objects.create(
-                name=validated_data['hashtag']['name'])
-        if biterm is None:
-            word_i = Word.objects.create(
-                char_string=validated_data['biterm']['word_i']['char_string'])
-            word_j = Word.objects.create(
-                char_string=validated_data['biterm']['word_j']['char_string'])
-            biterm = Biterm.objects.create(
-                word_i=word_i, word_j=word_j)
 
         coOccurrance = CoOccurrence.objects.filter(
             hashtag=hashtag, biterm=biterm).first()
@@ -102,6 +89,7 @@ class CoOccurrenceSerializer(serializers.ModelSerializer):
                 hashtag=hashtag, biterm=biterm, frequency=1)
         else:
             coOccurrance.frequency += 1
+            coOccurrance.save()
 
         return coOccurrance
 
@@ -116,6 +104,11 @@ class HashtagTaskSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         tag_data = validated_data['hashtag']
-        tag = Hashtag.objects.filter(name=tag_data['name']).first()
-        task = HashtagTask.objects.create(hashtag=tag)
+        task = HashtagTask.objects.filter(
+            hashtag__name=tag_data['name']).first()
+        if task is None:
+            tag = Hashtag.objects.filter(name=tag_data['name']).first()
+            task = HashtagTask.objects.create(
+                hashtag=tag)
+
         return task

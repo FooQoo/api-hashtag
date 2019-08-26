@@ -12,14 +12,16 @@ class Word(models.Model):
 
 
 class Biterm(models.Model):
-    class Meta:
-        unique_together = ('word_i', 'word_j')
-    biterm_id = models.UUIDField(
-        default=uuid.uuid4, primary_key=True, editable=False)
+
+    biterm_id = models.CharField(
+        max_length=72, primary_key=True, editable=False)
     word_i = models.ForeignKey(
         Word, on_delete=models.PROTECT, related_name='word_i')
     word_j = models.ForeignKey(
         Word, on_delete=models.PROTECT, related_name='word_j')
+
+    def __str__(self):
+        return self.word_i.char_string + ',' + self.word_j.char_string
 
 
 class Hashtag(models.Model):
@@ -37,7 +39,7 @@ class CoOccurrence(models.Model):
     frequency = models.IntegerField()
 
     def __str__(self):
-        return self.hashtag.name
+        return "({0},{1}) = {2}".format(self.biterm.word_i.char_string, self.biterm.word_j.char_string, self.hashtag.name)
 
 
 class HashtagTask(models.Model):

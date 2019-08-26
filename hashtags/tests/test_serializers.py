@@ -10,12 +10,12 @@ class WordSerializerTest(TestCase):
         self.serializer = WordSerializer()
 
     def test_create(self):
-        validated_data = {'char_string': 'python'}
+        validated_data = {'char_string': 'rust'}
 
         word = self.serializer.create(validated_data)
         words = Word.objects.all()
         self.assertEqual(word.char_string, validated_data['char_string'])
-        self.assertEqual(len(words), 3)
+        self.assertEqual(len(words), 5)
 
     def test_create_duplicate(self):
         validated_data = {'char_string': 'maven'}
@@ -23,7 +23,7 @@ class WordSerializerTest(TestCase):
         word = self.serializer.create(validated_data)
         words = Word.objects.all()
         self.assertEqual(word.char_string, validated_data['char_string'])
-        self.assertEqual(len(words), 2)
+        self.assertEqual(len(words), 4)
 
 
 class BitermSerializerTest(TestCase):
@@ -38,12 +38,10 @@ class BitermSerializerTest(TestCase):
 
         biterm = self.serializer.create(validated_data)
         biterms = Biterm.objects.all()
-        words = Word.objects.all()
         self.assertEqual(biterm.word_i.char_string,
                          validated_data['word_i']['char_string'])
         self.assertEqual(biterm.word_j.char_string,
                          validated_data['word_j']['char_string'])
-        self.assertEqual(len(words), 4)
         self.assertEqual(len(biterms), 2)
 
     def test_create_duplicate_biterm(self):
@@ -58,7 +56,6 @@ class BitermSerializerTest(TestCase):
                          validated_data['word_i']['char_string'])
         self.assertEqual(biterm.word_j.char_string,
                          validated_data['word_j']['char_string'])
-        self.assertEqual(len(words), 2)
         self.assertEqual(len(biterms), 1)
 
 
@@ -74,7 +71,7 @@ class HashtagSerializerTest(TestCase):
         hashtag = self.serializer.create(validated_data)
         hashtags = Hashtag.objects.all()
         self.assertEqual(hashtag.name, validated_data['name'])
-        self.assertEqual(len(hashtags), 2)
+        self.assertEqual(len(hashtags), 3)
 
     def test_create_duplicate(self):
         validated_data = {'name': 'spring'}
@@ -82,7 +79,7 @@ class HashtagSerializerTest(TestCase):
         hashtag = self.serializer.create(validated_data)
         hashtags = Hashtag.objects.all()
         self.assertEqual(hashtag.name, validated_data['name'])
-        self.assertEqual(len(hashtags), 1)
+        self.assertEqual(len(hashtags), 2)
 
 
 class CoOccurrenceSerializerTest(TestCase):
@@ -119,4 +116,4 @@ class CoOccurrenceSerializerTest(TestCase):
         self.assertEqual(coOccurrence.hashtag.name,
                          validated_data['hashtag']['name'])
         self.assertEqual(len(coOccurrences), 1)
-        self.assertEqual(coOccurrences[0].frequency, 1)
+        self.assertEqual(coOccurrences[0].frequency, 2)
