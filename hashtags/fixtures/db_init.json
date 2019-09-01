@@ -1,0 +1,60 @@
+[
+    {
+        "model": "hashtags.word",
+        "pk": "00000000000000000000000000000000",
+        "fields": {
+            "char_string": "java"
+        }
+    },
+    {
+        "model": "hashtags.word",
+        "pk": "00000000000000000000000000000001",
+        "fields": {
+            "char_string": "maven"
+        }
+    },
+    {
+        "model": "hashtags.word",
+        "pk": "00000000000000000000000000000002",
+        "fields": {
+            "char_string": "conda"
+        }
+    },
+    {
+        "model": "hashtags.word",
+        "pk": "00000000000000000000000000000003",
+        "fields": {
+            "char_string": "python"
+        }
+    },
+    {
+        "model": "hashtags.biterm",
+        "pk": "00000000000000000000000000000000",
+        "fields": {
+            "word_i_id": "00000000000000000000000000000000",
+            "word_j_id": "00000000000000000000000000000001"
+        }
+    },
+    {
+        "model": "hashtags.hashtag",
+        "pk": "00000000000000000000000000000000",
+        "fields": {
+            "name": "spring"
+        }
+    },
+    {
+        "model": "hashtags.hashtag",
+        "pk": "00000000000000000000000000000001",
+        "fields": {
+            "name": "lombok"
+        }
+    },
+    {
+        "model": "hashtags.cooccurrence",
+        "fields": {
+            "biterm": "00000000000000000000000000000000",
+            "hashtag": "00000000000000000000000000000000",
+            "frequency": 1
+        }
+    }
+]

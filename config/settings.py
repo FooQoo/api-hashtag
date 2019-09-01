@@ -12,6 +12,13 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 import json
+from os.path import join, dirname
+from dotenv import load_dotenv
+
+load_dotenv(verbose=True)
+
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -90,8 +97,8 @@ DATABASES = {
         'PASSWORD': os.environ["DB_PASSWORD"],
         'ATOMIC_REQUESTS': True,
         'OPTIONS': {
-                    'charset': 'utf8mb4',
-                },
+            'charset': 'utf8mb4',
+        },
     }
 }
 
