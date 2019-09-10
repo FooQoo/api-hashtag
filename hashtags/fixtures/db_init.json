@@ -39,14 +39,18 @@
         "model": "hashtags.hashtag",
         "pk": "00000000000000000000000000000000",
         "fields": {
-            "name": "spring"
+            "name": "spring",
+            "created_at": "2017-12-10T10:00:00+09:00",
+            "updated_at": "2017-12-10T10:00:00+09:00"
         }
     },
     {
         "model": "hashtags.hashtag",
         "pk": "00000000000000000000000000000001",
         "fields": {
-            "name": "lombok"
+            "name": "lombok",
+            "created_at": "2017-12-10T10:00:00+09:00",
+            "updated_at": "2017-12-10T10:00:00+09:00"
         }
     },
     {

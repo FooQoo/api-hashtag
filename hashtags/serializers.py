@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Word, Biterm, CoOccurrence, Hashtag, HashtagTask
+from .models import Word, Biterm, CoOccurrence, Hashtag
 from drf_writable_nested import WritableNestedModelSerializer
 
 
@@ -92,23 +92,3 @@ class CoOccurrenceSerializer(serializers.ModelSerializer):
             coOccurrance.save()
 
         return coOccurrance
-
-
-class HashtagTaskSerializer(serializers.ModelSerializer):
-    hashtag = HashtagSerializer()
-
-    class Meta:
-        model = HashtagTask
-        read_only_fields = ('updated_at', 'created_at')
-        fields = ('task_id', 'hashtag', 'status')
-
-    def create(self, validated_data):
-        tag_data = validated_data['hashtag']
-        task = HashtagTask.objects.filter(
-            hashtag__name=tag_data['name']).first()
-        if task is None:
-            tag = Hashtag.objects.filter(name=tag_data['name']).first()
-            task = HashtagTask.objects.create(
-                hashtag=tag)
-
-        return task

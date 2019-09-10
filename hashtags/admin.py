@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Hashtag, HashtagTask, Word, Biterm, CoOccurrence
+from .models import Hashtag, Tweet, Word, Biterm, CoOccurrence
 
 
 @admin.register(Word)
@@ -12,6 +12,11 @@ class BitermAdmin(admin.ModelAdmin):
     pass
 
 
+@admin.register(Tweet)
+class BitermAdmin(admin.ModelAdmin):
+    pass
+
+
 @admin.register(CoOccurrence)
 class CoOccurrenceAdmin(admin.ModelAdmin):
     pass
@@ -19,9 +24,4 @@ class CoOccurrenceAdmin(admin.ModelAdmin):
 
 @admin.register(Hashtag)
 class HashtagAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(HashtagTask)
-class HashtagTaskAdmin(admin.ModelAdmin):
     pass
